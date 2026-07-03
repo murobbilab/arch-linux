@@ -210,7 +210,7 @@ Mount ulang:
 
 ```bash
 mount -o noatime,compress=zstd,ssd,discard=async,subvol=@ /dev/nvme0n1p2 /mnt
-mkdir -p /mnt/{home,.snapshots,var/cache,var/log,tmp,efi}
+mkdir -p /mnt/{home,var/cache,var/log,tmp,efi}
 
 mount -o noatime,compress=zstd,ssd,discard=async,subvol=@home /dev/nvme0n1p2 /mnt/home
 mount -o noatime,compress=zstd,ssd,discard=async,subvol=@cache /dev/nvme0n1p2 /mnt/var/cache
@@ -399,7 +399,7 @@ Pakai UKI kalau kamu mau setup yang lebih modern, rapi, dan cocok buat Secure Bo
 Di dalam `arch-chroot`:
 
 ```bash
-pacman -S systemd
+pacman -S efibootmgr systemd
 ```
 
 Biasanya `systemd` sudah ikut terinstall dari base system, tapi command ini aman buat memastikan.
@@ -467,17 +467,17 @@ ALL_kver="/boot/vmlinuz-linux"
 
 PRESETS=('default' 'fallback')
 
-default_uki="/boot/EFI/Linux/arch-linux.efi"
-default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
+default_uki="/efi/EFI/Linux/arch-linux.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
 
-fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"
+fallback_uki="/efi/EFI/Linux/arch-linux-fallback.efi"
 fallback_options="-S autodetect"
 ```
 
 Pastikan folder tujuan ada:
 
 ```bash
-mkdir -p /boot/EFI/Linux
+mkdir -p /efi/EFI/Linux
 ```
 
 Generate UKI:
@@ -489,7 +489,7 @@ mkinitcpio -P
 Cek hasilnya:
 
 ```bash
-ls -lah /boot/EFI/Linux
+ls -lah /efi/EFI/Linux
 ```
 
 Harus ada file seperti:
@@ -517,11 +517,7 @@ Contoh:
 Buat boot entry:
 
 ```bash
-efibootmgr --create \
-  --disk /dev/nvme0n1 \
-  --part 1 \
-  --label "Arch Linux UKI" \
-  --loader '\EFI\Linux\arch-linux.efi'
+efibootmgr --create --disk /dev/nvme0n1 --part 1 --label "Arch Linux UKI" --loader '\EFI\Linux\arch-linux.efi'
 ```
 
 Cek boot entry:
