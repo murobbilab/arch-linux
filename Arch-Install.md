@@ -114,36 +114,29 @@ NTP service: active
 
 ---
 
-## 5. Partisi & File System
-
-Lihat disk:
-
-``` bash
-lsblk
-```
-
-> \[!CAUTION\] Pastikan memilih disk yang benar sebelum memformat
-> partisi. Seluruh data pada partisi yang diformat akan hilang.
-
-### Skema Partisi UEFI
-
-| Partisi | Ukuran | Tipe | Mount Point |
-| --- | --- | --- | --- |
-| `/dev/nvme0n1p1` | 1 GiB | FAT32 (EFI System) | `/efi` atau `/boot` |
-| `/dev/nvme0n1p2` | Sisa Disk | ext4 / Btrfs | `/` |
-
----
-
-## Buat Partisi
+## 5. Buat Partisi
 
 ```bash
 cfdisk /dev/nvme0n1
 ```
 
-Buat partisi:
+Contoh layout:
 
-- `/dev/nvme0n1p1` → EFI System
-- `/dev/nvme0n1p2` → Linux filesystem / Root
+| Partisi | Ukuran | Type |
+|---------|--------|------|
+| /dev/nvme0n1p1 | 1 GiB | EFI System |
+| /dev/nvme0n1p2 | Sisa disk | Linux filesystem |
+
+> **Penting**
+>
+> Pastikan **Type** partisi pertama diubah menjadi **EFI System**.
+>
+> Di `cfdisk`:
+>
+> 1. Pilih partisi EFI.
+> 2. Pilih **Type**.
+> 3. Pilih **EFI System**.
+> 4. Baru pilih **Write**.
 
 Setelah selesai:
 
@@ -155,14 +148,14 @@ Setelah selesai:
 
 ## 6. Format Partisi
 
-### Opsi ext4
+### ext4
 
 ```bash
 mkfs.fat -F32 /dev/nvme0n1p1
 mkfs.ext4 /dev/nvme0n1p2
 ```
 
-### Opsi btrfs
+### btrfs
 
 ```bash
 mkfs.fat -F32 /dev/nvme0n1p1
