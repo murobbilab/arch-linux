@@ -129,7 +129,7 @@ lsblk
 
 | Partisi | Ukuran | Tipe | Mount Point |
 | --- | --- | --- | --- |
-| `/dev/nvme0n1p1` | 512 MiB | FAT32 (EFI System) | `/efi` atau `/boot` |
+| `/dev/nvme0n1p1` | 1 GiB | FAT32 (EFI System) | `/efi` atau `/boot` |
 | `/dev/nvme0n1p2` | Sisa Disk | ext4 / Btrfs | `/` |
 
 ---
